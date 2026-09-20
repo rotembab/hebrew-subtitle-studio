@@ -4,6 +4,8 @@ A free, local English-to-Hebrew subtitle translator. Import an SRT or WebVTT fil
 
 The translation instructions focus on **meaning and natural Hebrew**: context-sensitive idioms, tone, slang, gender agreement, names, and dialogue spread across subtitle cues. For example, “break a leg” before an audition should become “בהצלחה”, while a literal injury stays an injury.
 
+The model is encouraged to use natural spoken Hebrew, reshape sentences and omit redundant words when context already conveys them. It should preserve the intended action, important facts and tone, including explicit wording, without copying English sentence structure.
+
 ## Start
 
 Requires [Node.js 22+](https://nodejs.org/) and [Ollama](https://ollama.com/download). No npm dependencies or API key.
@@ -42,7 +44,7 @@ Open **http://127.0.0.1:4318**. An alternative port can be set with the `PORT` e
 - Asks for a short intended-meaning paraphrase before the Hebrew text to help separate an idiom's meaning from its wording.
 - Keeps original speaker labels as context, asks the model to identify them separately, and removes those prefixes from Hebrew dialogue while preserving names spoken within a line, dialogue dashes and formatting tags.
 - Requests structured JSON from Ollama and validates cue IDs, order, non-empty text and formatting tags. Invalid batches are retried once; batches that hit the output limit are split into smaller ones automatically.
-- Optionally reviews each draft against the source to correct idioms, meaning and phrasing. If that review fails, the draft remains available with an explicit warning.
+- Optionally reviews each draft against the source to correct idioms, meaning and phrasing. Automatic warnings are passed to the reviewer to target detected meaning errors, unnatural collocations, profession/field confusion and softened explicit dialogue. If that review fails, the draft remains available with an explicit warning.
 - Preserves original timestamps, cue identifiers, overlapping cues, WebVTT metadata and positioning. No retiming, merging or deletion of cues.
 - Wraps eligible plain-text translations into two lines and flags excessive length, reading speed, missing Hebrew or ambiguity. A small set of additional heuristics flags potentially literal idiom renderings. It never truncates dialogue to fit or replaces an idiom automatically.
 - Uses logical right-to-left Hebrew Unicode. SRT export is UTF-8 with BOM and CRLF; VTT export is UTF-8.

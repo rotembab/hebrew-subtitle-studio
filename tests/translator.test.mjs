@@ -99,6 +99,9 @@ test("second pass can correct a first-pass mistranslation", async () => {
   );
   assert.equal(result[0].text, "בהצלחה!");
   assert.equal(calls.length, 2);
+  const review = JSON.parse(calls[1].messages.at(-1).content);
+  assert.equal(review.automaticChecks[0].id, 1);
+  assert(review.automaticChecks[0].warnings.some((w) => w.includes("idiom")));
 });
 test("missing or reordered cues cause a retry, never silently corrupt the file", async () => {
   const { fetcher, calls } = mock([reply([row(2)]), reply([row(1), row(2)])]);

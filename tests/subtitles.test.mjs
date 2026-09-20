@@ -114,3 +114,42 @@ test("idiom checks flag a literal rendering without changing a valid translation
     [],
   );
 });
+test("meaning checks flag profession errors, wrong idioms and softened explicit dialogue", () => {
+  const check = (english, hebrew) =>
+    qualityWarnings({ text: english, start: 0, end: 10 }, hebrew);
+  assert(
+    check("She works as an architect.", "היא עובדת כאדריכלות.").some((w) =>
+      w.includes("Profession mismatch"),
+    ),
+  );
+  assert.deepEqual(
+    check("She works as an architect.", "היא עובדת כאדריכלית."),
+    [],
+  );
+  assert.deepEqual(
+    check("She studied architecture.", "היא למדה אדריכלות."),
+    [],
+  );
+  assert(
+    check("He screwed everything up.", "הוא חילל הכול.").some((w) =>
+      w.includes("Meaning mismatch"),
+    ),
+  );
+  assert.deepEqual(check("He screwed everything up.", "הוא דפק הכול."), []);
+  assert.deepEqual(
+    check("He desecrated the shrine.", "הוא חילל את המקדש."),
+    [],
+  );
+  assert(
+    check("They had sex.", "הם התענגו.").some((w) =>
+      w.includes("explicit action"),
+    ),
+  );
+  assert.deepEqual(check("They had sex.", "הם עשו סקס."), []);
+  assert.deepEqual(check("Enjoy yourselves.", "תתענגו."), []);
+  assert(
+    check("She was making a name for herself.", "היא התחילה לצבור שם.").some(
+      (w) => w.includes("collocation"),
+    ),
+  );
+});
