@@ -201,3 +201,28 @@ test("changed formatting and empty output fail validation", () => {
     /invalid subtitle/,
   );
 });
+test("translation validation removes identified labels before review and export", () => {
+  const cue = { id: 1, text: "Nurse: <i>Hello, Maya.</i>", start: 0, end: 4 };
+  const result = validateTranslation(
+    reply([{ ...row(1, "אחות: <i>שלום, מאיה.</i>"), speakerLabels: ["אחות"] }]),
+    [cue],
+  );
+  assert.equal(result[0].text, "<i>שלום, מאיה.</i>");
+  assert.deepEqual(result[0].warnings, []);
+  assert.throws(
+    () =>
+      validateTranslation(
+        reply([{ ...row(1, "<i>אחות:</i>"), speakerLabels: ["אחות"] }]),
+        [cue],
+      ),
+    /no dialogue/,
+  );
+  assert.throws(
+    () =>
+      validateTranslation(
+        reply([{ ...row(1, "<i>שלום.</i>"), speakerLabels: "אחות" }]),
+        [cue],
+      ),
+    /invalid speaker labels/,
+  );
+});

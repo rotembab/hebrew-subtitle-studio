@@ -5,6 +5,7 @@ import {
   serializeSubtitles,
   wrapSubtitle,
   qualityWarnings,
+  removeSpeakerLabels,
 } from "../lib/subtitles.mjs";
 const srt =
   "\uFEFF1\r\n00:00:01,000 --> 00:00:03,000\r\n<i>Hello.</i>\r\n\r\n2\r\n00:00:02,900 --> 00:00:05,000\r\nGoodbye.\r\n";
@@ -70,6 +71,29 @@ test("wrapping does not corrupt speaker breaks or tags and loses no words", () =
   const long = "זו שורה ארוכה מאוד שצריכה להתחלק לשתי שורות בלי לאבד אף מילה";
   assert.equal(wrapSubtitle(long).replace("\n", " "), long);
   assert.equal(wrapSubtitle(long).split("\n").length, 2);
+});
+test("speaker label removal preserves spoken names, dashes, tags and dialogue colons", () => {
+  assert.equal(
+    removeSpeakerLabels("אחות: שברת את הרגל, מאיה.", ["אחות"]),
+    "שברת את הרגל, מאיה.",
+  );
+  assert.equal(
+    removeSpeakerLabels("- <b>מאיה:</b> אתה בא, טום?\n- טום: <i>כן.</i>", [
+      "מאיה",
+      "טום",
+    ]),
+    "- <b></b>אתה בא, טום?\n- <i>כן.</i>",
+  );
+  assert.equal(
+    removeSpeakerLabels("מאיה: תזכורת: להתקשר לטום.", ["מאיה"]),
+    "תזכורת: להתקשר לטום.",
+  );
+  assert.equal(
+    removeSpeakerLabels("תזכורת: להתקשר לטום.", ["מאיה"]),
+    "תזכורת: להתקשר לטום.",
+  );
+  assert.equal(removeSpeakerLabels("עכשיו 12:30.", []), "עכשיו 12:30.");
+  assert.equal(removeSpeakerLabels("ד״ר א.: שלום.", ["ד״ר א."]), "שלום.");
 });
 test("QA flags untranslated text, fast reading and changed tags", () => {
   const cue = parseSubtitles(srt).cues[0];

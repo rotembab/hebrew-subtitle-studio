@@ -40,6 +40,7 @@ Open **http://127.0.0.1:4318**. An alternative port can be set with the `PORT` e
 
 - Translates sequential batches of up to 12 cues, with four preceding and four following cues for context, plus previous Hebrew translations and your character/terminology notes.
 - Asks for a short intended-meaning paraphrase before the Hebrew text to help separate an idiom's meaning from its wording.
+- Keeps original speaker labels as context, asks the model to identify them separately, and removes those prefixes from Hebrew dialogue while preserving names spoken within a line, dialogue dashes and formatting tags.
 - Requests structured JSON from Ollama and validates cue IDs, order, non-empty text and formatting tags. Invalid batches are retried once; batches that hit the output limit are split into smaller ones automatically.
 - Optionally reviews each draft against the source to correct idioms, meaning and phrasing. If that review fails, the draft remains available with an explicit warning.
 - Preserves original timestamps, cue identifiers, overlapping cues, WebVTT metadata and positioning. No retiming, merging or deletion of cues.
