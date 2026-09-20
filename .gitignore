@@ -1,0 +1,8 @@
+node_modules/
+.env
+output/
+*.log
+.runtime/
+*.hebrew-project.json
+*.he.srt
+*.he.vtt

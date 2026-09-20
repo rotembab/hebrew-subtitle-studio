@@ -1,0 +1,15 @@
+{
+  "name": "hebrew-subtitle-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Private, local English-to-Hebrew subtitle translation with Ollama",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "evaluate": "node scripts/evaluate.mjs"
+  }
+}

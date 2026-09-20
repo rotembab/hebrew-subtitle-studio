@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Private English to Hebrew subtitle translation, running on your computer."
+    />
+    <title>Hebrew Subtitle Studio</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">א</span>
+        <div>
+          <h1>Hebrew Subtitle Studio</h1>
+          <p>English to natural Hebrew</p>
+        </div>
+      </div>
+      <span class="privacy">Local model · No API fees</span>
+    </header>
+    <main>
+      <aside class="setup" aria-label="Translation setup">
+        <section>
+          <h2>Your subtitles</h2>
+          <label class="dropzone" id="dropzone" for="file"
+            ><span class="file-icon" aria-hidden="true">＋</span
+            ><strong>Choose subtitle file</strong
+            ><span>SRT or VTT · up to 3 MB</span
+            ><input
+              id="file"
+              type="file"
+              accept=".srt,.vtt"
+              aria-label="Choose subtitle file"
+          /></label>
+          <div class="file-actions">
+            <button id="sample" class="text-button">Try an example</button
+            ><label class="text-button restore-label"
+              >Open saved project<input
+                id="restore"
+                type="file"
+                accept=".json"
+                aria-label="Open saved project"
+            /></label>
+          </div>
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>Local model</h2>
+            <button
+              id="refresh"
+              class="text-button"
+              aria-label="Refresh local model connection"
+            >
+              Refresh
+            </button>
+          </div>
+          <label for="model">Translation model</label
+          ><select id="model">
+            <option value="">Checking Ollama…</option>
+          </select>
+          <p id="connection" class="hint" role="status">
+            Connecting to Ollama on this computer…
+          </p>
+          <div id="setup-help" class="setup-help" hidden>
+            <p>Open Ollama, then install the translation model once:</p>
+            <code>ollama pull gemma4:12b</code>
+            <p>
+              The download needs about 7.6 GB. Translation runs offline after
+              setup.
+            </p>
+          </div>
+        </section>
+        <section>
+          <h2>Give the dialogue context</h2>
+          <label for="context"
+            >Characters, setting &amp; preferred names
+            <span class="optional">Optional</span></label
+          >
+          <textarea
+            id="context"
+            rows="5"
+            maxlength="5000"
+            placeholder="Maya is a woman; Daniel is a man. They are siblings. Keep 'Hawkins' as הוקינס. The tone is casual."
+          ></textarea>
+          <p class="hint">
+            Helps with Hebrew gender, recurring names, slang, and tone.
+          </p>
+          <label class="checkbox"
+            ><input id="review" type="checkbox" checked /><span
+              >Review the translation a second time<small
+                >Checks meaning and phrasing. Takes longer.</small
+              ></span
+            ></label
+          >
+        </section>
+        <div class="translate-actions">
+          <button id="translate" class="primary" disabled>
+            Translate to Hebrew</button
+          ><button id="stop" class="secondary" hidden>Stop translation</button>
+        </div>
+        <p class="local-note">
+          Your subtitles are processed on this computer. Nothing is sent to a
+          translation service.
+        </p>
+      </aside>
+      <section class="workspace" aria-label="Subtitle editor">
+        <div class="workspace-toolbar">
+          <div>
+            <h2 id="filename">Subtitle workspace</h2>
+            <p id="fileinfo">Load a file to begin</p>
+          </div>
+          <div class="export-actions">
+            <button id="save" class="secondary" disabled>Save project</button
+            ><button id="download" class="primary" disabled>
+              Export Hebrew
+            </button>
+          </div>
+        </div>
+        <div class="progress-area">
+          <div class="progress-copy">
+            <span id="status" role="status" aria-live="polite"
+              >Ready when you are.</span
+            ><span id="progress-count"></span>
+          </div>
+          <progress
+            id="progress"
+            value="0"
+            max="100"
+            aria-label="Translation progress"
+          ></progress>
+        </div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <div class="editor-tools">
+          <div class="filters" aria-label="Subtitle filter">
+            <button class="filter active" id="all" aria-pressed="true">
+              All cues <span id="total-count">0</span></button
+            ><button class="filter" id="flagged" aria-pressed="false">
+              Needs review <span id="review-count">0</span>
+            </button>
+          </div>
+          <label class="search-label"
+            ><span class="sr-only">Search subtitles</span
+            ><input id="search" type="search" placeholder="Search dialogue…"
+          /></label>
+        </div>
+        <div class="column-headings">
+          <span>Cue / Time</span
+          ><span>English <span class="muted">Original</span></span
+          ><span lang="he" dir="rtl"
+            >עברית <span class="muted">תרגום</span></span
+          >
+        </div>
+        <div id="empty" class="empty">
+          <div class="empty-mark" aria-hidden="true">
+            <span>“</span><span lang="he">א</span>
+          </div>
+          <h3>The same meaning.<br />A natural Hebrew voice.</h3>
+          <p>
+            Load your English subtitles to translate, compare, and fine-tune
+            each line.
+          </p>
+          <div class="idiom-example">
+            <span>“You're barking up the wrong tree.”</span
+            ><span lang="he" dir="rtl">״אתה טועה בכתובת.״</span
+            ><small>An equivalent expression, chosen in context.</small>
+          </div>
+        </div>
+        <div id="cues" aria-label="Subtitle cues"></div>
+        <div id="pagination" class="pagination" hidden>
+          <button id="prev" class="secondary">Previous</button
+          ><span id="page-info"></span
+          ><button id="next" class="secondary">Next</button>
+        </div>
+        <footer class="editor-footer">
+          <span>Original timing is preserved</span
+          ><span>Hebrew text stays editable</span>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>

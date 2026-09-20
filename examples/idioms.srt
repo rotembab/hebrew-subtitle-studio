@@ -1,0 +1,31 @@
+1
+00:00:01,000 --> 00:00:04,000
+Daniel: Nervous about your audition, Maya?
+
+2
+00:00:04,200 --> 00:00:07,500
+Maya: A little. I've got butterflies in my stomach.
+
+3
+00:00:07,700 --> 00:00:10,500
+Daniel: You've worked hard. Break a leg!
+
+4
+00:00:10,700 --> 00:00:14,000
+Maya: Thanks. I'll give it my best shot.
+
+5
+00:00:14,200 --> 00:00:17,800
+Daniel: And don't let one bad audition get under your skin.
+
+6
+00:00:18,000 --> 00:00:21,500
+Maya: You're right. It's not the end of the world.
+
+7
+00:00:22,000 --> 00:00:26,000
+Daniel: By the way, did you tell anyone about the surprise party?
+
+8
+00:00:26,200 --> 00:00:29,500
+Maya: Of course not. My lips are sealed.
